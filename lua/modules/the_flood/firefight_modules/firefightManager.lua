@@ -15,11 +15,11 @@ end
 
 -- These are the variables for firefightManager.respawnTimer()
 local coviesRespawnStart = false
-local covieRespawnCounter = 0
+local covieRespawnCounter = 300
 local covieRespawnTimer = 300
 local odstsRespawnStart = false
-local odstRespawnCounter = 0
-local odstRespawnTimer = 150
+local odstRespawnCounter = 300
+local odstRespawnTimer = 300
 -- This respawn the AI when triggered by firefightManager.aiCheck()
 function firefightManager.respawnTimer()
     -- This spawn the Covenant when there are only 4 of them.
@@ -27,7 +27,7 @@ function firefightManager.respawnTimer()
         covieRespawnCounter = covieRespawnCounter - 1
     elseif coviesRespawnStart == true and covieRespawnCounter <= 0 then
         console_out("Covenant Bastards Inbound...")
-        hscOld.aiSpawn(1, "Covenant_Bastards")
+        hsc.ai_place("Covenant_Bastards")
         hsc.ai_magically_see_players("Covenant_Bastards")
         coviesRespawnStart = false
         covieRespawnCounter = covieRespawnTimer
@@ -37,7 +37,7 @@ function firefightManager.respawnTimer()
         odstRespawnCounter = odstRespawnCounter - 1
     elseif odstsRespawnStart == true and odstRespawnCounter <= 0 then
         console_out("Helljumpers Incoming!")
-        hscOld.aiSpawn(1, "Grid_Allies")
+        hsc.ai_place("Grid_Allies")
         odstsRespawnStart = false
         odstRespawnCounter = odstRespawnTimer
     end
@@ -52,29 +52,29 @@ function firefightManager.aiCheck()
     covieLivingCount = hscOld.aiLivingCount("Covenant_Bastards", "covie_bastards")
     odstLivingCount = hscOld.aiLivingCount("Grid_Allies", "odst_allies")
     -- Triggering the order to initiate respawn when living count reaches threshold.
-    if covieLivingCount <= 4 then
+    if covieLivingCount <= 8 then
         coviesRespawnStart = true
     end
     if odstLivingCount <= 2 then
         odstsRespawnStart = true
     end
     -- Makes the AI follow the player. Very much needed.
-    hscOld.aiAction(1, "Covenant_Bastards")
-    hscOld.aiAction(1, "Grid_Allies")
+    hsc.ai_follow_target_players("Covenant_Bastards")
+    hsc.ai_follow_target_players("Grid_Allies")
 end
 
 -- These are the variables for firefightManager.aiMagicallySee()
-local magicallySightCounter = 0
-local magicallySightTimer = 900
+local magicallySeeCounter = 0
+local magicallySeeTimer = 300
 -- This allows AI to magically see you. This is called each tick.
 function firefightManager.aiMagicallySee()
     hsc.ai_magically_see_players("Grid_Allies")
-    -- Enemies can only see you one tick, each 30 seconds. This should give you room to breath.
-    if magicallySightCounter > 0 then
-        covieRespawnCounter = magicallySightCounter - 1
-    elseif magicallySightCounter <= 0 then
-        hsc.aiMagicallySeePlayers("Covenant_Bastards")
-        magicallySightCounter = magicallySightTimer
+    -- Enemies can only see you one tick after certain time. Currently testing sweet spot.
+    if magicallySeeCounter > 0 then
+        magicallySeeCounter = magicallySeeCounter - 1
+    elseif magicallySeeCounter <= 0 then
+        hsc.ai_magically_see_players("Covenant_Bastards")
+        magicallySeeCounter = magicallySeeTimer
     end
 end
 
