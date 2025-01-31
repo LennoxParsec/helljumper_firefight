@@ -1,6 +1,7 @@
 -- Lua libraries
 local const = require "the_flood.constants"
 local engine = Engine
+local blam = require "blam"
 
 local healthRegen = {}
 

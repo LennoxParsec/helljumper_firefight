@@ -1,6 +1,6 @@
 -- Lua libraries
 local const = require "the_flood.constants"
-
+local blam = require "blam"
 
 local hudExtensions = {state = {playerCriticalHealth = false}}
 

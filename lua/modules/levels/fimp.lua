@@ -11,6 +11,7 @@ local playerPingObjectives = require "the_flood.gameplay_core.playerPingObjectiv
 local sprint = require "the_flood.gameplay_core.sprint"
 local weaponExtensions = require "the_flood.gameplay_core.weaponExtensions"
 local firefightManager = require "the_flood.firefight_modules.firefightManager"
+local vehiclesManager = require "the_flood.firefight_modules.vehiclesManager"
 
 dynamicCross.initializeSettings()
 
@@ -25,6 +26,7 @@ function OnTick()
     playerPingObjectives.pingObjectives()
     --weaponExtensions.casterFixHeat()
     firefightManager.eachTick()
+    vehiclesManager.eachTick()
 end
 
 local onTickEvent = balltze.event.tick.subscribe(function(event)

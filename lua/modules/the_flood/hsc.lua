@@ -74,16 +74,16 @@ end
 ------------------------------------------------------------------------------
 --- AI Functions
 ------------------------------------------------------------------------------
---- Attempt to get the number of alive AI of an AI encounter
+--- AI Living Count
 ---@param encounterName string Name of the encounter in Sapien
 ---@param globalVar string
+---@return number
 function hsc.aiLivingCount(encounterName, globalVar) 
-    local getAiLivingCountScript = [[(begin (set "%s" (ai_living_count "%s")))]]
+    local getAiLivingCountScript = [[(begin (set %s (ai_living_count "%s")))]]
     execute_script(getAiLivingCountScript:format(globalVar, encounterName))
+    ---@diagnostic disable-next-line: return-type-mismatch
     return get_global(globalVar)
 end
-
-
 
 --- AI Spawning
 ---@param1 script type (1 - 5)
@@ -95,17 +95,24 @@ function hsc.aiSpawn(type, encounterName)
 end
 
 --- AI Migration
---- @param from encounter string
---- @param to encounter string 
+--- @param1 from string name of the encounter in Sapien
+--- @param2 to string name of the encounter in Sapien
 function hsc.aiMigrate(from, to)
-    execute_script("ai_migrate ".. from .. " " .. to)
+    execute_script("ai_migrate " .. from .. " " .. to)
+end
+
+--- AI Migration By Unit
+--- @param1 from string name of the object or objects
+--- @param2 to string name of the encounter
+function hsc.aiMigrateByUnit(unit, ai)
+    execute_script("ai_migrate_by_unit " .. unit .. " " .. ai)
 end
 
 function hsc.aiCommandList(ai, list)
-  execute_script("ai_command_list " .. ai .. " " .. list)
+    execute_script("ai_command_list " .. ai .. " " .. list)
 end
 
---- Magic Sight
+--- AI Magic Sight
 ---@param1 script the behaviour for ai magically seeing something. Use string or integers 1/2/3.
 ---@param2 encounterName string name of the encounter in Sapien 
 ---@param3 Object (encounter name or object name)
@@ -117,6 +124,11 @@ function hsc.aiMagicallySee(script, sourceEncounter, targetObj)
     else
         execute_script("ai_magically_see_" .. returnType[script] .. " " .. sourceEncounter .. " " .. targetObj)
     end
+end
+
+--- AI Magic Sight Player.
+function hsc.aiMagicallySeePlayers(ai)
+    execute_script("ai_magically_see_players " .. ai)
 end
 
 --- Set AI Allegiances
@@ -186,15 +198,35 @@ function hsc.aiState(type, encounterName, boolean)
     execute_script("ai_" .. returnType[type] .. " " .. encounterName .. " " .. returnBoolean[boolean])
 end
 
+function hsc.aiDisregard(objectList, boolean)
+    execute_script("ai_disregard " .. objectList .. " " .. boolean)
+end
+
+function hsc.aiExitVehicle(ai)
+    execute_script("ai_exit_vehicle " .. ai)
+end
+
+function hsc.aiVehicleEntrableDistance(vehicle, real)
+    execute_script("ai_vehicle_enterable_distance " .. vehicle .. " " .. real)
+end
+
+function hsc.aiVehicleEncounter(vehicle, encounter)
+    execute_script("ai_vehicle_encounter " .. vehicle .. " " .. encounter)
+end
 
 ---@param biped string Declare a biped
 ---@param ai string Declare an ai squad formartted encounter/sqd
 function hsc.aiAttach(biped, ai)
-  execute_script("ai_attach " .. biped .. " " .. ai)
+    execute_script("ai_attach " .. biped .. " " .. ai)
 end
 ------------------------------------------------------------------------------
 --- Unit Functions
 ------------------------------------------------------------------------------
+-- Converts an object to a unit.
+function hsc.objectToUnit(object)
+    execute_script("unit " .. object)
+end
+
 -- Get unit health
 ---@param unitName string name for unitName OR static script referencing the player biped.
 function hsc.unitGetHealth(unitName)
@@ -219,6 +251,38 @@ end
 ---@param1 Unit to eject
 function hsc.unitExitVehicle(unit)
     execute_script("unit_exit_vehicle " .. unit)
+end
+
+--- Vehicle load magic
+function hsc.vehicleLoadMagic(vehicle, seat, ai)
+    execute_script("vehicle_load_magic " .. vehicle .. " " .. seat .. " " .. "(ai_actors " .. ai .. ")")
+    --referencia: (vehicle_load_magic vehicle seat (ai_actors ai))
+end
+
+--- Vehicle load magic without specified seat
+function hsc.vehicleLoadNoSeat(vehicle, ai)
+    execute_script("vehicle_load_magic " .. vehicle .. " " .. ai)
+end
+
+--- Vehicle unload magic
+function hsc.vehicleUnload(vehicle, seat)
+    execute_script("vehicle_unload " .. vehicle .. " " .. seat)
+end
+
+--- Custom animation
+---@param vehicle string
+---@param model_animation_path string
+---@param animation_name string
+---@param boolean string
+function hsc.customAnimation(vehicle, model_animation_path, animation_name, boolean)
+    execute_script("custom_animation " .. vehicle .. " " .. model_animation_path .. " " .. animation_name .. " " .. boolean)
+end
+
+--- Recorded Animation Hover
+---@param1 vehicle name in scenario
+---@param2 recorded animation name in scenario
+function hsc.recordingAnimationHover(vehicle, recorded_animation_name)
+    execute_script("recording_play_and_hover " .. vehicle .. " " .. recorded_animation_name)
 end
 
 ------------------------------------------------------------------------------
@@ -248,13 +312,53 @@ function hsc.objectScale(object, scale, frames)
     execute_script("object_set_scale " .. object .. " " .. scale .. " " .. frames)
 end
 
---- Object Create
+--- Object Create: Creates an object from the scenario. 
 ---@param1 object Name
 function hsc.objectCreate(objectName)
+    execute_script("object_create " .. objectName)
+end
+
+--- Object Create: Destroys an object.
+---@param1 object Name
+function hsc.objectDestroy(objectName)
+    execute_script("object_destroy " .. objectName)
+end
+
+--- Object Create A New: Creates an object, destroying it first if it already exists. 
+---@param1 object Name
+function hsc.objectCreateANew(objectName)
+    execute_script("object_create_anew " .. objectName)
+end
+
+--- Object Create Containing: Creates all objects from the scenario whose names contain the given substring.
+---@param1 object Name
+function hsc.objectCreateContaining(objectName)
     execute_script("object_create_containing " .. objectName)
 end
 
+--- Object Create A New Containing: Create A New + Create Containing.
+---@param1 object Name
+function hsc.objectCreateANewContaining(objectName)
+    execute_script("object_create_anew_containing " .. objectName)
+end
 
+--- Object Destroy Containing: Destroys + Create Containing.
+---@param1 object Name
+function hsc.objectDestroyContaining(objectName)
+    execute_script("object_destroy_containing " .. objectName)
+end
+
+--- Object Destroy All: Destroy all objects from the scenario. 
+function hsc.objectDestroyAll()
+    execute_script("object_destroy_all")
+end
+
+--- Object Destroy Containing: Destroys + Create Containing.
+---@param1 object Name
+---@param2 cutsceneFlag Name
+function hsc.objectTeleport(objectName, cutsceneFlag)
+    execute_script("object_teleport " .. objectName .. " " .. cutsceneFlag)
+end
 
 ------------------------------------------------------------------------------
 --- Player Functions
@@ -275,9 +379,22 @@ function hsc.actionTest(type)
     return false
 end
 
---- Object teleportFrom
+--- Object teleportFrom.
 function hsc.teleMe(flag)
     execute_script("object_teleport (unit (list_get (players) 0)) " .. flag)
+end
+
+-- Enable or disable player input.
+---@param1 boolean
+function hsc.playerEnableInput(boolean)
+    execute_script("player_enable_input " .. boolean)
+end
+
+-- Adds/resets the player's health, shield, and inventory (weapons and grenades) to the named profile.
+-- Resets if third parameter is true, adds if false. 
+---@param1 boolean
+function hsc.playerAddEquipment(unit, starting_profile, boolean)
+    execute_script("player_add_equipment " .. unit .. " " .. starting_profile .. " " .. boolean)
 end
 
 ------------------------------------------------------------------------------
@@ -462,6 +579,23 @@ function hsc.clearNav(type, unit, source)
     local returnType = {"flag", "object"}
     execute_script("deactivate_nav_point_" .. returnType[type] .. " " .. unit .. " " .. source)
 end
+
+--- Enable navpoint for enemy.
+---@param unit string Name for unitName OR static script referencing the player biped.
+---@param ai string Declare an ai squad formartted encounter/sqd.
+---@param object number Number of the biped from the object list.
+function hsc.navpointEnemy(unit, ai, object)
+    local navpointEnemy = [[(begin
+            (activate_nav_point_object
+                default
+                %s
+                (unit
+                    (list_get (ai_actors %s) %s)
+                )
+                0.400000
+            ))]]
+    execute_script(navpointEnemy:format(unit, ai, object))
+end
 ------------------------------------------------------------------------------
 --- Static Script Functions
 ------------------------------------------------------------------------------
@@ -487,9 +621,15 @@ function hsc.setCamera(camera_point, real, sleep)
 end
 
 --- Camera control
----@param1 num
-function hsc.cameraControl(num)
-    execute_script("camera_control " .. num)
+---@param1 boolean
+function hsc.cameraControl(boolean)
+    execute_script("camera_control " .. boolean)
+end
+
+--- Makes the scripted camera zoom out around a unit as if it were dead.
+---@param1 unit
+function hsc.cameraSetDead(unit)
+    execute_script("camera_set_dead " .. unit)
 end
 ------------------------------------------------------------------------------
 --- Device Functions
