@@ -1,0 +1,95 @@
+# Compiled Lua sources
+luac.out
+
+# luarocks build files
+*.src.rock
+*.zip
+*.tar.gz
+
+# Object files
+*.o
+*.os
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.def
+*.exp
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+
+# VS Code
+.vscode
+
+# IntelliJ IDEA
+.idea
+
+# Distribution and script files
+# Do not upload dist scripts as they should be handle by Mercury to avoid code mismatching
+/dist/*
+/temp/*
+package/game-maps/*.map
+packdiff/*
+package/lua-map/*.lua
+package/my-games-data-path/balltze/plugins/*.lua
+package_a/*
+#WTF
+lua/lua_modules/offsets.lua
+
+# Map project files
+data/
+data
+tags/
+tags
+mek_config/
+tags_globals_debug/
+tags_globals_aqueduct/
+tags_globals_last_voyage/
+tags_globals_last_voyage
+tags_globals_penance/
+tags_globals_penance
+tags_globals_treason/
+tags_globals_treason
+hek/
+maps
+gamestate.txt
+debug.txt
+six-shooter.ini
+*.cfg
+
+# Cloud files
+*.db*
+*.png*
+*.zip
+*.7z
+*.mercu
+*.log
+Desktop.ini
+.gitignore
+tags_globals_debug/globals/globals.globals
+
+tags_globals_aqueduct/globals/globals.globals
+tags_globals_impasse/globals.globals
+package/lua-sapp/the_flood_mp_server.lua
