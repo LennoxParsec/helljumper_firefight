@@ -3,6 +3,11 @@ local engine = Engine
 package.preload["luna"] = nil
 package.loaded["luna"] = nil
 require "luna"
+local script = require "script"
+blam = require "blam"
+tagClasses = blam.tagClasses
+objectClasses = blam.objectClasses
+
 
 --local main
 local loadWhenIn = {
@@ -23,6 +28,20 @@ function PluginMetadata()
         reloadable = true,
         maps = loadWhenIn
     }
+end
+
+-- Print version on pause menu
+function OnFrame()
+    local isPlayerOnMenu = read_byte(blam.addressList.gameOnMenus) == 1
+    if isPlayerOnMenu then
+        return
+    end
+    local font = "smaller"
+    local align = "right"
+    local bounds = {left = 0, top = 460, right = 632, bottom = 480}
+    local textColor = {1.0, 0.45, 0.72, 1.0}
+    draw_text("helljumperFirefight-v-1.0.0", bounds.left, bounds.top, bounds.right, bounds.bottom, font, align,
+              table.unpack(textColor))
 end
 
 local function loadChimeraCompatibility()
@@ -53,21 +72,46 @@ local function loadChimeraCompatibility()
     execute_script = engine.hsc.executeScript
 end
 
-local main
+local loaded = false
 
 function PluginLoad()
-    logger = balltze.logger.createLogger("Helljumper")
+    logger = balltze.logger.createLogger("Helljumper Firefight")
     logger:muteDebug(not DebugMode)
 
     loadChimeraCompatibility()
 
     balltze.event.tick.subscribe(function(event)
         if event.time == "before" then
-            if not main then
-                main = require "the_flood.main"
+            script.dispatch()
+            if not loaded then
+                    local serverType = engine.netgame.getServerType()
+                    if serverType == "local" or serverType == "none" then
+                        local mapName = engine.map.getCurrentMapHeader().name
+                        local levelName = mapName:split("_")[1]
+                        local ok, result = pcall(require, "levels." .. levelName)
+                        if not ok then
+                            logger:warning("Error loading level script: {}", result)
+                        else
+                            logger:info("Loaded level script for \"{}\"", levelName)
+                        end
+                    end
+                    loaded = true
+                end
             end
+    end)
+
+    local function main()
+        logger:info("Loading main")
+    end
+
+    balltze.event.mapLoad.subscribe(function(event)
+        if event.time == "after" then
+            server_type = engine.netgame.getServerType()
+            main()
         end
     end)
+
+    main()
 
     return true
 end
