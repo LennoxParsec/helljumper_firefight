@@ -6,7 +6,8 @@ require "luna"
 
 --local main
 local loadWhenIn = {
-    "faqu"
+    "faqu",
+    "fimp"
 }
 
 loadWhenIn = table.extend(loadWhenIn, table.map(loadWhenIn, function(map)
