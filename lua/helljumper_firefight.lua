@@ -4,7 +4,7 @@ package.preload["luna"] = nil
 package.loaded["luna"] = nil
 require "luna"
 local script = require "script"
-blam = require "blam"
+local blam = require "blam"
 tagClasses = blam.tagClasses
 objectClasses = blam.objectClasses
 
