@@ -26,19 +26,16 @@ function vehiclesManager.vehiclesRespawn()
     elseif redVehiclesRespawnStart == true and redVehiclesCounter <= 0 then
         redVehiclesRespawnStart = false
         redVehiclesCounter = vehicleRespawnTimer
-        console_out("Placing red vehicles...")
-        hsc.ai_place("Covenant_Pilots/red_revenant")
+        console_out("Motorized A Lance inbound!")
+        hsc.ai_place("Covenant_Red_Pilots/red_revenant")
         hsc.object_create_anew("red_revenant")
-        hsc.vehicle_load_magic("red_revenant", "G-driver", "Covenant_Pilots/red_revenant")
-        --hsc.ai_vehicle_encounter("red_revenant", "Covenant_Bastards")
-        hsc.ai_place("Covenant_Pilots/red_ghost_a")
+        hsc.vehicle_load_magic("red_revenant", "", hsc.ai_actors("Covenant_Red_Pilots/red_revenant"))
+        hsc.ai_place("Covenant_Red_Pilots/red_ghost_a")
         hsc.object_create_anew("red_ghost_a")
-        hsc.vehicle_load_magic("red_ghost_a", "G-driver", "Covenant_Pilots/red_ghost_a")
-        --hsc.ai_vehicle_encounter("red_ghost_a", "Covenant_Bastards")
-        hsc.ai_place("Covenant_Pilots/red_ghost_b")
+        hsc.vehicle_load_magic("red_ghost_a", "", hsc.ai_actors("Covenant_Red_Pilots/red_ghost_a"))
+        hsc.ai_place("Covenant_Red_Pilots/red_ghost_b")
         hsc.object_create_anew("red_ghost_b")
-        hsc.vehicle_load_magic("red_ghost_b", "G-driver", "Covenant_Pilots/red_ghost_b")
-        --hsc.ai_vehicle_encounter("red_ghost_b", "Covenant_Bastards")
+        hsc.vehicle_load_magic("red_ghost_b", "", hsc.ai_actors("Covenant_Red_Pilots/red_ghost_b"))
     end
     -- Spawning the Blue Vehicles.
     if blueVehiclesRespawnStart == true and blueVehiclesCounter > 0 then
@@ -46,19 +43,16 @@ function vehiclesManager.vehiclesRespawn()
     elseif blueVehiclesRespawnStart == true and blueVehiclesCounter <= 0 then
         blueVehiclesRespawnStart = false
         blueVehiclesCounter = vehicleRespawnTimer
-        console_out("Placing blue vehicles...")
-        hsc.ai_place("Covenant_Pilots/blue_revenant")
+        console_out("Motorized B Lance inbound!")
+        hsc.ai_place("Covenant_Blue_Pilots/blue_revenant")
         hsc.object_create_anew("blue_revenant")
-        hsc.vehicle_load_magic("blue_revenant", "G-driver", "Covenant_Pilots/blue_revenant")
-        --hsc.ai_vehicle_encounter("blue_revenant", "Covenant_Bastards")
-        hsc.ai_place("Covenant_Pilots/blue_ghost_a")
+        hsc.vehicle_load_magic("blue_revenant", "", hsc.ai_actors("Covenant_Blue_Pilots/blue_revenant"))
+        hsc.ai_place("Covenant_Blue_Pilots/blue_ghost_a")
         hsc.object_create_anew("blue_ghost_a")
-        hsc.vehicle_load_magic("blue_ghost_a", "G-driver", "Covenant_Pilots/blue_ghost_a")
-        --hsc.ai_vehicle_encounter("blue_ghost_a", "Covenant_Bastards")
-        hsc.ai_place("Covenant_Pilots/blue_ghost_b")
+        hsc.vehicle_load_magic("blue_ghost_a", "", hsc.ai_actors("Covenant_Blue_Pilots/blue_ghost_a"))
+        hsc.ai_place("Covenant_Blue_Pilots/blue_ghost_b")
         hsc.object_create_anew("blue_ghost_b")
-        hsc.vehicle_load_magic("blue_ghost_b", "G-driver", "Covenant_Pilots/blue_ghost_b")
-        --hsc.ai_vehicle_encounter("blue_ghost_b", "Covenant_Bastards")
+        hsc.vehicle_load_magic("blue_ghost_b", "", hsc.ai_actors("Covenant_Blue_Pilots/blue_ghost_b"))
     end
     -- Spawning the Wraiths.
     if wraithsRespawnStart == true and wraithsCounter > 0 then
@@ -66,13 +60,13 @@ function vehiclesManager.vehiclesRespawn()
     elseif wraithsRespawnStart == true and wraithsCounter <= 0 then
         wraithsRespawnStart = false
         wraithsCounter = vehicleRespawnTimer
-        console_out("Placing wraith vehicles...")
-        hsc.ai_place("Covenant_Pilots/red_wraith")
+        console_out("Wraiths on da hills!")
+        hsc.ai_place("Covenant_Wraith_Pilots/red_wraith")
         hsc.object_create_anew("red_wraith")
-        hsc.vehicle_load_magic("red_wraith", "G-driver", "Covenant_Pilots/red_wraith")
-        hsc.ai_place("Covenant_Pilots/blue_wraith")
+        hsc.vehicle_load_magic("red_wraith", "", hsc.ai_actors("Covenant_Wraith_Pilots/red_wraith"))
+        hsc.ai_place("Covenant_Wraith_Pilots/blue_wraith")
         hsc.object_create_anew("blue_wraith")
-        hsc.vehicle_load_magic("blue_wraith", "G-driver", "Covenant_Pilots/blue_wraith")
+        hsc.vehicle_load_magic("blue_wraith", "", hsc.ai_actors("Covenant_Wraith_Pilots/blue_wraith"))
     end
 end
 
@@ -83,9 +77,12 @@ local wraithsLivingCount
 -- This checks the state of the AI to respawn them and make them follow the player.
 function vehiclesManager.vehiclesLiveCount()
     -- Needed variable for hsc.AiLivingCount to work.
-    blueVehiclesLivingCount = hscOld.aiLivingCount("Covenant_Pilots/blue_revenant", "blue_revenant") + hscOld.aiLivingCount("Covenant_Pilots/blue_ghost_a", "blue_ghost_a") + hscOld.aiLivingCount("Covenant_Pilots/blue_ghost_b", "blue_ghost_b")
-    redVehiclesLivingCount = hscOld.aiLivingCount("Covenant_Pilots/red_revenant", "red_revenant") + hscOld.aiLivingCount("Covenant_Pilots/red_ghost_a", "red_ghost_a") + hscOld.aiLivingCount("Covenant_Pilots/red_ghost_b", "red_ghost_b")
-    wraithsLivingCount = hscOld.aiLivingCount("Covenant_Pilots/red_wraith", "red_wraith") + hscOld.aiLivingCount("Covenant_Pilots/blue_wraith", "blue_wraith")
+    blueVehiclesLivingCount = hscOld.aiLivingCount("Covenant_Blue_Pilots", "blue_revenant_count")
+    redVehiclesLivingCount = hscOld.aiLivingCount("Covenant_Red_Pilots", "red_revenant_count")
+    wraithsLivingCount = hscOld.aiLivingCount("Covenant_Wraith_Pilots", "red_wraith_count")
+    hsc.ai_follow_target_players("Covenant_Blue_Pilots")
+    hsc.ai_follow_target_players("Covenant_Red_Pilots")
+    hsc.ai_follow_target_players("Covenant_Wraith_Pilots")
     -- Triggering the order to initiate respawn when living count reaches 0. Has to be this way because of object_create_anew.
     if redVehiclesLivingCount == 0 then
         redVehiclesRespawnStart = true
