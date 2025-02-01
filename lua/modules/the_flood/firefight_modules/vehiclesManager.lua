@@ -9,6 +9,13 @@ local vehiclesManager = {}
 function vehiclesManager.eachTick()
     vehiclesManager.vehiclesRespawn()
     vehiclesManager.vehiclesLiveCount()
+    hsc.ai_magically_see_players("Covenant_Bastards")
+    hsc.ai_magically_see_players("Covenant_Blue_Pilots")
+    hsc.ai_magically_see_players("Covenant_Red_Pilots")
+    hsc.ai_magically_see_players("Covenant_Wraith_Pilots")
+    hsc.ai_follow_target_players("Covenant_Blue_Pilots")
+    hsc.ai_follow_target_players("Covenant_Red_Pilots")
+    hsc.ai_follow_target_players("Covenant_Wraith_Pilots")
 end
 
 -- These are the variables for vehiclesManager.vehiclesRespawn()
@@ -80,9 +87,6 @@ function vehiclesManager.vehiclesLiveCount()
     blueVehiclesLivingCount = hscOld.aiLivingCount("Covenant_Blue_Pilots", "blue_revenant_count")
     redVehiclesLivingCount = hscOld.aiLivingCount("Covenant_Red_Pilots", "red_revenant_count")
     wraithsLivingCount = hscOld.aiLivingCount("Covenant_Wraith_Pilots", "red_wraith_count")
-    hsc.ai_follow_target_players("Covenant_Blue_Pilots")
-    hsc.ai_follow_target_players("Covenant_Red_Pilots")
-    hsc.ai_follow_target_players("Covenant_Wraith_Pilots")
     -- Triggering the order to initiate respawn when living count reaches 0. Has to be this way because of object_create_anew.
     if redVehiclesLivingCount == 0 then
         redVehiclesRespawnStart = true
