@@ -1,0 +1,14 @@
+{
+    "target": "lua53",
+    "output": "dist/helljumper_firefight.lua",
+    "main": "lua/helljumper_firefight",
+    "include": [
+        "lua",
+        "lua/modules"
+    ],
+    "name": "Helljumper Firefight",
+    "modules": [
+        "levels/faqu",
+        "levels/fimp"
+    ]
+}
